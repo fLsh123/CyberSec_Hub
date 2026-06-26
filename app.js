@@ -1031,6 +1031,7 @@ $('modalOverlay').addEventListener('click',(e)=>{if(e.target===$('modalOverlay')
 $('resSubmit').addEventListener('click',()=>{
   const name=$('resName').value.trim();
   const url=$('resUrl').value.trim();
+<<<<<<< HEAD
   if(!name||!url) return alert('Please fill in both name and URL.');
   
   // Simulated submission
@@ -1040,6 +1041,46 @@ $('resSubmit').addEventListener('click',()=>{
   // Reset form
   $('resName').value='';
   $('resUrl').value='';
+=======
+  const catVal=$('resCat').value;
+  if(!name||!url) return alert('Please fill in both name and URL.');
+  
+  // Map standard option value to exact page IDs (expanding tools to cover both sub-tools sections)
+  let pageIds = ['practice'];
+  if(catVal === 'ctf') pageIds = ['ctf'];
+  else if(catVal === 'tools') pageIds = ['tools', 'learn-tools'];
+  else if(catVal === 'news') pageIds = ['news'];
+
+  // Add the newly submitted resource dynamically with resilient property arrays
+  // By pre-populating all levels and careers, we guarantee that the new resource
+  // will never be hidden by active filters (such as active career paths or levels).
+  const newRes = {
+    t: name,
+    u: url,
+    d: "Suggested by user. Under verification.",
+    p: pageIds,
+    sub: "User Suggestions",
+    c: "free",
+    cl: "Suggested",
+    l: ["beg", "int", "adv"], // Match all levels by default so level filters do not hide it
+    cp: ["soc", "pt", "cloud", "grc", "mal", "dfir", "app", "arch", "bb", "red", "blue"], // Match all careers by default so career filters do not hide it
+    ctf: ["web", "crypto", "forensics", "re", "pwn", "osint", "misc"] // Match all CTF categories
+  };
+  R.push(newRes);
+
+  // Transition form state to show success modal
+  $('modalForm').style.display='none';
+  $('modalSuccess').style.display='block';
+  
+  // Reset input fields
+  $('resName').value='';
+  $('resUrl').value='';
+
+  // Instantly re-render the page to reflect the new resource
+  if(S.page === 'landing') renderLanding();
+  else if(S.page === 'career-guide') renderCareerGuide();
+  else renderPage();
+>>>>>>> 9439e60 (title logo)
 });
 
 $('modalDone').addEventListener('click',closeModal);
